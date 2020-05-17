@@ -1,6 +1,5 @@
 package caixeiro.genetico.artefatos;
 
-import caixeiro.genetico.exceptions.TamanhoException;
 import javafx.util.Pair;
 
 import java.util.ArrayList;

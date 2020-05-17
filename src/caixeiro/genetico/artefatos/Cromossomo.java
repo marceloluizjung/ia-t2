@@ -1,5 +1,6 @@
 package caixeiro.genetico.artefatos;
 
+import java.nio.channels.IllegalSelectorException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -19,6 +20,9 @@ public class Cromossomo {
     public void setGenomas(ArrayList<Genoma> genomas) {
         this.genomas = genomas;
     }
+    public ArrayList<Genoma> getGenomas() {
+        return this.genomas;
+    }
 
     @Override
     public String toString() {
@@ -37,7 +41,11 @@ public class Cromossomo {
         Genoma atual;
         for (int i = 1; i < this.genomas.size(); i++) {
             atual = this.genomas.get(i);
-            avaliacao += anterior.getPesoAdjacencia(atual);
+            if (anterior.temAdjacencia(atual)) {
+                avaliacao += anterior.getPesoAdjacencia(atual);
+            } else {
+                return -1; // se não encontrar a adjacencia
+            }
             anterior = atual;
         }
         return  avaliacao;
