@@ -2,10 +2,10 @@ package caixeiro.genetico.algoritmos;
 
 import caixeiro.genetico.artefatos.Cromossomo;
 import caixeiro.genetico.artefatos.Genoma;
+import javafx.util.Pair;
 
 import java.nio.channels.IllegalSelectorException;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 public class Genetico {
 
@@ -24,38 +24,55 @@ public class Genetico {
     private Cromossomo recombinar(Cromossomo pai, Cromossomo mae) {
         Cromossomo filho = new Cromossomo();
         ArrayList<Genoma> genomasFilho = filho.getGenomas();
+        ArrayList<Genoma> genomasIgnorados = new ArrayList<Genoma>();
+        List<Integer> posicoesIgnoradas = new LinkedList<Integer>();
 
-        // Gera a relação binaria
-        ArrayList<Boolean> relacao = new ArrayList<Boolean>();
-        for (int i = 0; i < (pai.getGenomas().size()-1); i++) {
-            if(seed.nextBoolean()) {
-                genomasFilho.add(i, pai.getGenomas().get(i));
+        do {
+
+            genomasFilho.clear();
+            genomasIgnorados.clear();
+            posicoesIgnoradas.clear();
+
+            // Gera a relação binaria
+            for (int i = 0; i < pai.getGenomas().size(); i++) {
+                if (seed.nextBoolean()) {
+                    genomasFilho.add(i, pai.getGenomas().get(i));
+                } else {
+                    genomasFilho.add(i, null);
+                    posicoesIgnoradas.add(i);
+                    genomasIgnorados.add(pai.getGenomas().get(i));
+                }
             }
-        }
-        //TODO: CONTINUAR
 
+            for (int i = 0; i < mae.getGenomas().size(); i++) {
+                for (Genoma genomaIgnorado : genomasIgnorados) {
+                    if (mae.getGenomas().get(i).equals(genomaIgnorado)) {
+                        genomasFilho.set(posicoesIgnoradas.get(0), genomaIgnorado);
+                        posicoesIgnoradas.remove(0);
+                    }
+                }
+            }
 
-        return filho;
+            // tratamento para garantir que novo filho não seja invalido
+        } while (filho.getAvaliacao() == -1);
+
+       return filho;
     }
 
     private Cromossomo mutar(Cromossomo cromossomo) {
-        ArrayList<Genoma> tempGenoma = cromossomo.getGenomas();
-        int posicaoGenomaA = seed.nextInt(tempGenoma.size());
-        int posicaoGenomaB = seed.nextInt(tempGenoma.size());
-        while (posicaoGenomaA == posicaoGenomaB) {
-            posicaoGenomaB = seed.nextInt(tempGenoma.size());
-        }
-        Genoma genomaA = tempGenoma.get(posicaoGenomaA);
-        Genoma genomaB = tempGenoma.get(posicaoGenomaB);
 
-        cromossomo.getGenomas().set(posicaoGenomaA, genomaB);
-        cromossomo.getGenomas().set(posicaoGenomaB, genomaA);
+        ArrayList<Genoma> tempGenoma;
+        int posicaoGenomaA;
+        int posicaoGenomaB;
+        Genoma genomaA;
+        Genoma genomaB;
 
-        // tratamento para garantir que nova mutação não será invalida
-        while(cromossomo.getAvaliacao() == -1) {
-            cromossomo.setGenomas(tempGenoma);
+        do {
+            tempGenoma = cromossomo.getGenomas();
             posicaoGenomaA = seed.nextInt(tempGenoma.size());
             posicaoGenomaB = seed.nextInt(tempGenoma.size());
+
+            // tratamento para o genoma nao permutar com ele mesmo
             while (posicaoGenomaA == posicaoGenomaB) {
                 posicaoGenomaB = seed.nextInt(tempGenoma.size());
             }
@@ -64,7 +81,9 @@ public class Genetico {
 
             cromossomo.getGenomas().set(posicaoGenomaA, genomaB);
             cromossomo.getGenomas().set(posicaoGenomaB, genomaA);
-        }
+
+            // tratamento para garantir que nova mutação não será invalida
+        } while(cromossomo.getAvaliacao() == -1);
 
         return  cromossomo;
     }
@@ -80,6 +99,7 @@ public class Genetico {
 
     public void problemaCaixeiro(Cromossomo entrada, int populacaoInicial) {
         this.setPopulacaoInicial(entrada, populacaoInicial);
+
         for (Cromossomo cromossomo : codigoGenetico) {
             System.out.println(cromossomo.toString() + " > " + cromossomo.getAvaliacao());
         }
@@ -99,6 +119,8 @@ public class Genetico {
 
         Cromossomo filho = this.recombinar(cromossomoA, cromossomoB);
 
+        System.out.println(filho.toString() + " > " + filho.getAvaliacao());
+        filho = this.mutar(filho);
         System.out.println(filho.toString() + " > " + filho.getAvaliacao());
 
     }

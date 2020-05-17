@@ -28,8 +28,12 @@ public class Cromossomo {
     public String toString() {
         StringBuilder retorno = new StringBuilder();
         for (Genoma genoma : this.genomas) {
-            retorno.append(genoma.getNomeCidade());
-            retorno.append(" - ");
+            if (genoma == null) {
+                retorno.append("xxxx - ");
+            } else {
+                retorno.append(genoma.getNomeCidade());
+                retorno.append(" - ");
+            }
         }
         // Hotfix para retirar o ultimo traço
         return retorno.toString().substring(0, retorno.toString().length()-2);
@@ -52,6 +56,7 @@ public class Cromossomo {
     }
 
     // Embaralha de forma aleatoria os genomas mantendo a integridade das adjacencias
+    // Impossivel realizar a tarefa em grafos não cicliclos
     public ArrayList<Genoma> gerarCadeiaAleatoria() {
         ArrayList<Genoma> tempGenomas = new ArrayList<>();
         int quantidade = this.genomas.size();
