@@ -1,23 +1,39 @@
 package caixeiro.genetico.algoritmos;
 
-import caixeiro.genetico.artefatos.ItemMochila;
-import caixeiro.genetico.artefatos.Mochila;
+import caixeiro.genetico.artefatos.Cromossomo;
 
 import java.util.ArrayList;
 
 public class Genetico {
 
-    private ArrayList<ItemMochila> variaveis;
+    private ArrayList<Cromossomo> codigoGenetico;
 
     public Genetico() {
-        this.variaveis = new ArrayList<ItemMochila>();
+        this.codigoGenetico = new ArrayList<Cromossomo>();
     }
 
-    public void addVariavel(ItemMochila variavel) {
-        this.variaveis.add(variavel);
+    private void addCromossomo(Cromossomo cromossomo) {
+        this.codigoGenetico.add(cromossomo);
     }
 
-    public void problemaMochila(Mochila mochila) {
+    private Cromossomo recombinar(Cromossomo pai, Cromossomo mae) {
+        Cromossomo filho = new Cromossomo();
+        return filho;
+    }
 
+    private Cromossomo mutar(Cromossomo cromossomo) {
+        return  cromossomo;
+    }
+
+    public void problemaCaixeiro(Cromossomo entrada, int populacaoInicial) {
+        Cromossomo elemento;
+        for (int i = 0; i < populacaoInicial; i++) {
+            elemento = new Cromossomo();
+            elemento.setGenomas(entrada.gerarCadeiaAleatoria());
+            this.addCromossomo(elemento);
+        }
+        for (Cromossomo cromossomo : codigoGenetico) {
+            System.out.println(cromossomo.toString() + " > " + cromossomo.getAvaliacao());
+        }
     }
 }

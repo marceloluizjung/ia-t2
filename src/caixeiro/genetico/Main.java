@@ -1,47 +1,33 @@
 package caixeiro.genetico;
 
 import caixeiro.genetico.algoritmos.Genetico;
-import caixeiro.genetico.artefatos.ItemMochila;
-import caixeiro.genetico.artefatos.Mochila;
+import caixeiro.genetico.artefatos.Cromossomo;
+import caixeiro.genetico.artefatos.Genoma;
 
 public class Main {
     public static void main(String[] args) {
+        Cromossomo entrada = new Cromossomo();
+        Genetico algoritmo = new Genetico();
 
-        Mochila mochila = new Mochila(5);
+        Genoma blumenau = new Genoma(1, "Blumenau");
+        Genoma gaxpar = new Genoma(2, "Gaxpar");
+        Genoma indaial = new Genoma(3, "Indaial");
+        Genoma joinville = new Genoma(3, "Joinville");
 
-        ItemMochila notebook = new ItemMochila();
-        notebook.setNome("Notebook");
-        notebook.setPeso(3000);
-        notebook.setTamanho(4);
+        blumenau.addAdjacencia(gaxpar, 3);
+        blumenau.addAdjacencia(indaial, 2);
 
-        ItemMochila tablet = new ItemMochila();
-        tablet.setNome("Tablet");
-        tablet.setPeso(1500);
-        tablet.setTamanho(3);
+        gaxpar.addAdjacencia(joinville, 6);
+        gaxpar.addAdjacencia(indaial, 4);
 
-        ItemMochila celular = new ItemMochila();
-        celular.setNome("Celular");
-        celular.setPeso(1000);
-        celular.setTamanho(2);
+        indaial.addAdjacencia(joinville, 5);
 
-        ItemMochila colar = new ItemMochila();
-        colar.setNome("Colar");
-        colar.setPeso(700);
-        colar.setTamanho(2);
+        entrada.addGenoma(blumenau);
+        entrada.addGenoma(indaial);
+        entrada.addGenoma(joinville);
+        entrada.addGenoma(gaxpar);
 
-        ItemMochila anel = new ItemMochila();
-        anel.setNome("Anel");
-        anel.setPeso(400);
-        anel.setTamanho(1);
-
-        Genetico algoritmoGenetico = new Genetico();
-        algoritmoGenetico.addVariavel(notebook);
-        algoritmoGenetico.addVariavel(tablet);
-        algoritmoGenetico.addVariavel(celular);
-        algoritmoGenetico.addVariavel(colar);
-        algoritmoGenetico.addVariavel(anel);
-
-        algoritmoGenetico.problemaMochila(mochila);
+        algoritmo.problemaCaixeiro(entrada, 3);
 
     }
 }
