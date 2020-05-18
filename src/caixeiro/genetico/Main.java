@@ -34,7 +34,7 @@ public class Main {
         entrada.addGenoma(gaxpar);
         entrada.addGenoma(pomerode);
 
-        algoritmo.problemaCaixeiro(entrada, 3);
+        algoritmo.problemaCaixeiro(entrada, 4);
 
     }
 }

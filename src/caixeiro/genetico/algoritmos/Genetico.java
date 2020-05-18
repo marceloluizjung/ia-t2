@@ -44,6 +44,7 @@ public class Genetico {
                 }
             }
 
+            // Adiciona os elementos em ordem da mãe
             for (int i = 0; i < mae.getGenomas().size(); i++) {
                 for (Genoma genomaIgnorado : genomasIgnorados) {
                     if (mae.getGenomas().get(i).equals(genomaIgnorado)) {
@@ -88,6 +89,56 @@ public class Genetico {
         return  cromossomo;
     }
 
+    private Pair<Cromossomo, Cromossomo> selecionar() {
+        int total = 0;
+        int totalPercentualRoleta = 0;
+        Long percentualRoleta = 0L;
+
+        for (Cromossomo cromossomo : codigoGenetico) {
+            total += cromossomo.getAvaliacao();
+        }
+        ArrayList<Pair<Genoma, Pair<Integer, Long>>> porcoes = new ArrayList<>();
+        for (int i = 0; i < codigoGenetico.size(); i++) {
+            percentualRoleta = (long)(1/((float)codigoGenetico.get(i).getAvaliacao()/total)*100)/10;
+            totalPercentualRoleta += percentualRoleta;
+            porcoes.add(new Pair(codigoGenetico.get(i), new Pair(codigoGenetico.get(i).getAvaliacao(), percentualRoleta)));
+        }
+
+        porcoes.sort((o1, o2) -> {if (o1.getValue().getKey() > o2.getValue().getKey()) { return -1; } else if (o1.equals(o2)) { return 0; } else { return 1; } });
+
+        int roleta = this.seed.nextInt(totalPercentualRoleta);
+        Pair<Genoma, Pair<Integer, Long>> pai = null;
+        Pair<Genoma, Pair<Integer, Long>> mae = null;
+
+        int percentual = 0;
+        for (int i = 0; i < porcoes.size(); i++) {
+            percentual += porcoes.get(i).getValue().getValue();
+            if (percentual >= roleta) {
+                totalPercentualRoleta -= porcoes.get(i).getValue().getValue();
+                pai = porcoes.get(i);
+                break;
+            }
+        }
+
+        porcoes.remove(pai);
+
+        roleta = this.seed.nextInt(totalPercentualRoleta);
+        percentual = 0;
+        for (int i = 0; i < porcoes.size(); i++) {
+            percentual += porcoes.get(i).getValue().getValue();
+            if (percentual >= roleta) {
+                mae = porcoes.get(i);
+                break;
+            }
+        }
+        if (pai == null || mae == null) {
+            return null;
+        }
+
+        return new Pair(pai.getKey(), mae.getKey());
+
+    }
+
     private void setPopulacaoInicial(Cromossomo entrada, int populacaoInicial) {
         Cromossomo elemento;
         for (int i = 0; i < populacaoInicial; i++) {
@@ -100,28 +151,71 @@ public class Genetico {
     public void problemaCaixeiro(Cromossomo entrada, int populacaoInicial) {
         this.setPopulacaoInicial(entrada, populacaoInicial);
 
+
         for (Cromossomo cromossomo : codigoGenetico) {
             System.out.println(cromossomo.toString() + " > " + cromossomo.getAvaliacao());
         }
 
-        System.out.println("----------------");
+        int melhor = 13;
+        int resultado = 0;
+        int iteracao = 0;
 
-        Cromossomo teste = codigoGenetico.get(0);
-        System.out.println(teste.toString() + " > " + teste.getAvaliacao());
-        teste = this.mutar(teste);
-        System.out.println(teste.toString() + " > " + teste.getAvaliacao());
+        do {
 
-        System.out.println("----------------");
+            iteracao++;
+            System.out.println("------[#I"+iteracao+"]----------");
+
+            Pair<Cromossomo, Cromossomo> pais = this.selecionar();
+
+            Cromossomo pai = pais.getKey();
+            Cromossomo mae = pais.getValue();
+
+            System.out.print("Pai: ");
+            System.out.println(pai + " > " + pai.getAvaliacao());
+            System.out.print("Mae: ");
+            System.out.println(mae + " > " + mae.getAvaliacao());
+
+            System.out.println("----------------");
+
+            Cromossomo filhoA = this.recombinar(pai, mae);
+            Cromossomo filhoB = this.recombinar(pai, mae);
+
+            System.out.print("Filho A: ");
+            System.out.println(filhoA + " > " + filhoA.getAvaliacao());
+
+            System.out.print("Filho B: ");
+            System.out.println(filhoB + " > " + filhoB.getAvaliacao());
 
 
-        Cromossomo cromossomoA = codigoGenetico.get(0);
-        Cromossomo cromossomoB = codigoGenetico.get(1);
+            System.out.println("----------------");
 
-        Cromossomo filho = this.recombinar(cromossomoA, cromossomoB);
+            filhoA = this.mutar(filhoA);
 
-        System.out.println(filho.toString() + " > " + filho.getAvaliacao());
-        filho = this.mutar(filho);
-        System.out.println(filho.toString() + " > " + filho.getAvaliacao());
+            System.out.print("Mutacao A: ");
+            System.out.println(filhoA + " > " + filhoA.getAvaliacao());
+
+            filhoB = this.mutar(filhoB);
+
+            System.out.print("Mutacao B: ");
+            System.out.println(filhoB + " > " + filhoB.getAvaliacao());
+
+            this.codigoGenetico.clear();
+            this.addCromossomo(filhoA);
+            this.addCromossomo(filhoB);
+            this.addCromossomo(pai);
+            this.addCromossomo(mae);
+
+            resultado = filhoB.getAvaliacao();
+            if (filhoA.getAvaliacao() < filhoB.getAvaliacao()) {
+                resultado = filhoA.getAvaliacao();
+            }
+
+            System.out.println("");
+            System.out.println("");
+
+
+
+        } while (resultado > melhor);
 
     }
 
