@@ -4,16 +4,74 @@ import caixeiro.genetico.algoritmos.Genetico;
 import caixeiro.genetico.artefatos.Cromossomo;
 import caixeiro.genetico.artefatos.Genoma;
 
+import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 public class Main {
+
+    private static Cromossomo entrada;
+
+    public static void actionPerformed() throws IOException {
+        JFileChooser f = new JFileChooser();
+        f.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        f.showSaveDialog(null);
+
+        File file = f.getSelectedFile();
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+
+        String linha = bufferedReader.readLine();
+        linha = linha.replaceAll("\"", "");
+
+        Genoma cidade;
+        String[] separador;
+        String[] ligacoes;
+        Integer origem, destino, peso;
+
+        int nLinha = 0;
+        int nCidade = 0;
+        while (linha != null) {
+            separador = linha.split(";");
+
+            if (nLinha == 0) {
+                for (String nomeCidade : separador) {
+                    cidade = new Genoma(nCidade, nomeCidade);
+                    entrada.addGenoma(cidade);
+                    nCidade++;
+                }
+            } else if (nLinha == 1) {
+                for (String ligacao : separador) {
+                    ligacoes = ligacao.split(" ");
+                    origem = Integer.valueOf(ligacoes[0]);
+                    destino = Integer.valueOf(ligacoes[1]);
+                    peso = Integer.valueOf(ligacoes[2]);
+                    entrada.addLigacao(origem, destino, peso);
+                }
+            }
+
+            linha = bufferedReader.readLine();
+            nLinha++;
+        }
+        bufferedReader.close();
+    }
+
     public static void main(String[] args) {
-        Cromossomo entrada = new Cromossomo();
+        entrada = new Cromossomo();
         Genetico algoritmo = new Genetico();
 
-        Genoma blumenau = new Genoma(1, "Blumenau");
+        try {
+            actionPerformed();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /*Genoma blumenau = new Genoma(1, "Blumenau");
         Genoma gaxpar = new Genoma(2, "Gaxpar");
         Genoma indaial = new Genoma(3, "Indaial");
-        Genoma joinville = new Genoma(3, "Joinville");
-        Genoma pomerode = new Genoma(4, "Pomerode");
+        Genoma joinville = new Genoma(4, "Joinville");
+        Genoma pomerode = new Genoma(5, "Pomerode");
 
         blumenau.addAdjacencia(gaxpar, 3);
         blumenau.addAdjacencia(indaial, 2);
@@ -32,9 +90,9 @@ public class Main {
         entrada.addGenoma(indaial);
         entrada.addGenoma(joinville);
         entrada.addGenoma(gaxpar);
-        entrada.addGenoma(pomerode);
+        entrada.addGenoma(pomerode);*/
 
-        algoritmo.problemaCaixeiro(entrada, 4);
+        algoritmo.problemaCaixeiro(entrada, 4, 13);
 
     }
 }

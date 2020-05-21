@@ -79,4 +79,8 @@ public class Cromossomo {
 
         return tempGenomas;
     }
+
+    public void addLigacao(Integer origem, Integer destino, Integer peso) {
+        this.genomas.get(origem).addAdjacencia(this.genomas.get(destino), peso);
+    }
 }

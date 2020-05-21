@@ -148,7 +148,7 @@ public class Genetico {
         }
     }
 
-    public void problemaCaixeiro(Cromossomo entrada, int populacaoInicial) {
+    public void problemaCaixeiro(Cromossomo entrada, int populacaoInicial, int melhor) {
         this.setPopulacaoInicial(entrada, populacaoInicial);
 
 
@@ -156,7 +156,6 @@ public class Genetico {
             System.out.println(cromossomo.toString() + " > " + cromossomo.getAvaliacao());
         }
 
-        int melhor = 13;
         int resultado = 0;
         int iteracao = 0;
 

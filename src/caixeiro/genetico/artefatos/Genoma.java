@@ -17,6 +17,10 @@ public class Genoma {
         return this.nomeCidade;
     }
 
+    public int getCodigoCidade() {
+        return codigoCidade;
+    }
+
     public int getPesoAdjacencia(Genoma adjacencia) {
         for (Pair<Genoma, Integer> cidade : this.cidadesAdjacentes) {
             if (cidade.getKey().equals(adjacencia)) {
