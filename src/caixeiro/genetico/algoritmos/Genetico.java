@@ -158,12 +158,14 @@ public class Genetico {
 
         int resultado = 0;
         int iteracao = 0;
+        int iteracaoGlobal = 0;
         int melhor = 0;
         Cromossomo melhorCromossomo = null;
 
         do {
 
-            System.out.println("------[#I"+iteracao+"]----------");
+            iteracaoGlobal++;
+            System.out.println("------[#I"+iteracaoGlobal+"]----------");
 
             Pair<Cromossomo, Cromossomo> pais = this.selecionar();
 
@@ -212,6 +214,7 @@ public class Genetico {
 
             if (resultado < melhor || melhor == 0) {
                 melhor = resultado;
+                iteracao = 0;
 
                 melhorCromossomo = filhoB;
                 if (filhoA.getAvaliacao() < filhoB.getAvaliacao()) {
@@ -228,7 +231,7 @@ public class Genetico {
 
 
         System.out.println("----------------");
-        System.out.println("Melhor resultado depois de " + iteracao + " iteracoes com o mesmo menor valor:");
+        System.out.println("Melhor resultado depois de " + iteracaoGlobal + " iteracoes com o mesmo menor valor:");
         System.out.println(melhorCromossomo.toString());
         System.out.println("Resultado: " + melhor);
 
