@@ -148,7 +148,7 @@ public class Genetico {
         }
     }
 
-    public void problemaCaixeiro(Cromossomo entrada, int populacaoInicial, int melhor) {
+    public void problemaCaixeiro(Cromossomo entrada, int populacaoInicial, int iteracoesMelhores) {
         this.setPopulacaoInicial(entrada, populacaoInicial);
 
 
@@ -158,10 +158,11 @@ public class Genetico {
 
         int resultado = 0;
         int iteracao = 0;
+        int melhor = 0;
+        Cromossomo melhorCromossomo = null;
 
         do {
 
-            iteracao++;
             System.out.println("------[#I"+iteracao+"]----------");
 
             Pair<Cromossomo, Cromossomo> pais = this.selecionar();
@@ -209,12 +210,27 @@ public class Genetico {
                 resultado = filhoA.getAvaliacao();
             }
 
+            if (resultado < melhor || melhor == 0) {
+                melhor = resultado;
+
+                melhorCromossomo = filhoB;
+                if (filhoA.getAvaliacao() < filhoB.getAvaliacao()) {
+                    melhorCromossomo = filhoA;
+                }
+            }else if (resultado == melhor) {
+                iteracao++;
+            }
+
             System.out.println("");
             System.out.println("");
 
+        } while (iteracao <= iteracoesMelhores);
 
 
-        } while (resultado > melhor);
+        System.out.println("----------------");
+        System.out.println("Melhor resultado depois de " + iteracao + " iteracoes com o mesmo menor valor:");
+        System.out.println(melhorCromossomo.toString());
+        System.out.println("Resultado: " + melhor);
 
     }
 

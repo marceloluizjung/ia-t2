@@ -2,6 +2,7 @@ package caixeiro.genetico.artefatos;
 
 import java.nio.channels.IllegalSelectorException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Cromossomo {
@@ -58,24 +59,26 @@ public class Cromossomo {
     // Embaralha de forma aleatoria os genomas mantendo a integridade das adjacencias
     // Impossivel realizar a tarefa em grafos não cicliclos
     public ArrayList<Genoma> gerarCadeiaAleatoria() {
+
+
         ArrayList<Genoma> tempGenomas = new ArrayList<>();
-        int quantidade = this.genomas.size();
+        ArrayList<Genoma> auxGenomas = this.getGenomas();
+        Cromossomo tempCromossomo = new Cromossomo();
 
-        int item = seed.nextInt(quantidade);
-        Genoma elemento = this.genomas.get(item);
-        Genoma elementoAnterior = elemento;
-        tempGenomas.add(elemento);
+        int index = 0;
+        Genoma elemento = null;
 
-        while (tempGenomas.size() < quantidade) {
-            item = seed.nextInt(quantidade);
-            elemento = this.genomas.get(item);
-
-            // Verifica se tem adjacencia e se ainda não está na lista
-            if (elementoAnterior.temAdjacencia(elemento) && tempGenomas.indexOf(elemento) == -1) {
-                tempGenomas.add(elemento);
-                elementoAnterior = elemento;
+        do {
+            tempGenomas.clear();
+            while (tempGenomas.size() != auxGenomas.size()) {
+                index = seed.nextInt(auxGenomas.size());
+                elemento = auxGenomas.get(index);
+                if (!tempGenomas.contains(elemento)) {
+                    tempGenomas.add(elemento);
+                }
             }
-        }
+            tempCromossomo.setGenomas(tempGenomas);
+        } while (tempCromossomo.getAvaliacao() == -1);
 
         return tempGenomas;
     }

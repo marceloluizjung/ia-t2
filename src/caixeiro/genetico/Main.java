@@ -67,11 +67,11 @@ public class Main {
             e.printStackTrace();
         }
 
-        /*Genoma blumenau = new Genoma(1, "Blumenau");
-        Genoma gaxpar = new Genoma(2, "Gaxpar");
-        Genoma indaial = new Genoma(3, "Indaial");
-        Genoma joinville = new Genoma(4, "Joinville");
-        Genoma pomerode = new Genoma(5, "Pomerode");
+        /*Genoma blumenau = new Genoma(0, "Blumenau");
+        Genoma gaxpar = new Genoma(1, "Gaxpar");
+        Genoma indaial = new Genoma(2, "Indaial");
+        Genoma joinville = new Genoma(3, "Joinville");
+        Genoma pomerode = new Genoma(4, "Pomerode");
 
         blumenau.addAdjacencia(gaxpar, 3);
         blumenau.addAdjacencia(indaial, 2);
@@ -92,7 +92,7 @@ public class Main {
         entrada.addGenoma(gaxpar);
         entrada.addGenoma(pomerode);*/
 
-        algoritmo.problemaCaixeiro(entrada, 4, 13);
+        algoritmo.problemaCaixeiro(entrada, 4, 10);
 
     }
 }
